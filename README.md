@@ -57,11 +57,6 @@ No payment gateway is integrated. New customer and admin-created orders are alwa
 
 ## Demo Accounts
 
-- Admin: `admin@trustshieldssl.example`
-- Admin password: `Admin123!ChangeMe`
-- Customer: `customer@example.com`
-- Customer password: `Customer123!ChangeMe`
-
 Change or remove these accounts before production use.
 
 ## Production Notes
