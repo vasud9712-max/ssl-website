@@ -1,0 +1,177 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String        @id @default(cuid())
+  name         String
+  email        String        @unique
+  passwordHash String
+  role         String        @default("CUSTOMER")
+  status       String        @default("ACTIVE")
+  company      String?
+  phone        String?
+  address      String?
+  city         String?
+  state        String?
+  country      String?
+  zip          String?
+  orders       Order[]
+  tickets      Ticket[]
+  replies      TicketReply[]
+  activities   ActivityLog[]
+  resetRequests PasswordResetRequest[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model Category {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  slug      String    @unique
+  products  Product[]
+  createdAt DateTime  @default(now())
+}
+
+model Product {
+  id                String   @id @default(cuid())
+  categoryId        String
+  category          Category @relation(fields: [categoryId], references: [id])
+  name              String
+  slug              String   @unique
+  validationType    String
+  domainsCovered    String
+  issuanceTime      String
+  price             Int
+  additionalSanPrice Int     @default(0)
+  features          String
+  details           String
+  enabled           Boolean  @default(true)
+  orders            Order[]
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model Order {
+  id                 String           @id @default(cuid())
+  orderNumber        String           @unique
+  userId             String
+  user               User             @relation(fields: [userId], references: [id])
+  productId          String
+  product            Product          @relation(fields: [productId], references: [id])
+  status             String           @default("PENDING_PAYMENT")
+  validationMethod   String
+  primaryDomain      String
+  domains            String
+  sanEntries         String?
+  csr                String?
+  organizationName   String?
+  address            String?
+  city               String?
+  state              String?
+  country            String?
+  zip                String?
+  certificatePem     String?
+  caBundle           String?
+  privateNotes       String?
+  adminNotes         String?
+  verificationNotes  String?
+  totalAmount        Int
+  paidAt             DateTime?
+  issuedAt           DateTime?
+  expiresAt          DateTime?
+  certificate        Certificate?
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+}
+
+model Certificate {
+  id           String   @id @default(cuid())
+  orderId      String   @unique
+  order        Order    @relation(fields: [orderId], references: [id])
+  serialNumber String?
+  commonName   String
+  sanEntries   String?
+  issuedAt     DateTime
+  expiresAt    DateTime
+  pem          String
+  caBundle     String?
+  createdAt    DateTime @default(now())
+}
+
+model Ticket {
+  id          String        @id @default(cuid())
+  userId      String
+  user        User          @relation(fields: [userId], references: [id])
+  subject     String
+  status      String        @default("OPEN")
+  priority    String        @default("NORMAL")
+  orderId     String?
+  attachments String?
+  replies     TicketReply[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model TicketReply {
+  id          String   @id @default(cuid())
+  ticketId    String
+  ticket      Ticket   @relation(fields: [ticketId], references: [id])
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  message     String
+  attachments String?
+  createdAt   DateTime @default(now())
+}
+
+model EmailTemplate {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  name      String
+  subject   String
+  body      String
+  enabled   Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  topic     String
+  message   String
+  status    String   @default("NEW")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ActivityLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  action    String
+  entity    String
+  entityId  String?
+  metadata  String?
+  createdAt DateTime @default(now())
+}
+
+model PasswordResetRequest {
+  id         String    @id @default(cuid())
+  userId     String?
+  user       User?     @relation(fields: [userId], references: [id])
+  ticketId   String?
+  name       String
+  email      String
+  status     String    @default("PENDING")
+  resolvedAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
