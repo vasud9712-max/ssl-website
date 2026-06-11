@@ -56,6 +56,33 @@ export default async function SslCertificatesPage() {
         </div>
       </section>
 
+      <section className="section ssl-plan-section" id="certificates">
+        <div className="container">
+          <div className="section-head centered">
+            <p className="eyebrow dark">Choose your certificate</p>
+            <h2>SSL plans for every domain structure.</h2>
+            <p>Select a certificate plan, Review the details, and Place SSL order..</p>
+          </div>
+          <div className="ssl-plan-grid">
+            {products.map((product, index) => (
+              <article className={`pricing-card ssl-page-plan ${index === 1 ? "featured" : ""}`} key={product.id}>
+                {index === 1 && <span className="popular-ribbon">Most Popular</span>}
+                <h3>{product.name}</h3>
+                <p className="pricing-summary">{product.domainsCovered}</p>
+                <div className="price">{dollars(product.price)}<span className="muted" style={{ fontSize: 16 }}>/year</span></div>
+                <ul className="feature-list">
+                  {decodeList(product.features).slice(0, 6).map((feature) => <li key={feature}>{feature}</li>)}
+                </ul>
+                <div className="plan-action-row">
+                  <a className={`button ${index === 1 ? "primary" : "secondary"}`} href={orderUrl(product.slug)}>Get Started</a>
+                  <a className="button secondary" href={productUrl(product.slug)}>Details</a>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="section ssl-benefits-section">
         <div className="container">
           <div className="section-head centered">
@@ -88,33 +115,6 @@ export default async function SslCertificatesPage() {
             <ul className="feature-list">
               {supportItems.map((item) => <li key={item}>{item}</li>)}
             </ul>
-          </div>
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="container">
-          <div className="section-head centered">
-            <p className="eyebrow dark">Choose your certificate</p>
-            <h2>SSL plans for every domain structure.</h2>
-            <p>Select a certificate plan, Review the details, and Place SSL order..</p>
-          </div>
-          <div className="ssl-plan-grid">
-            {products.map((product, index) => (
-              <article className={`pricing-card ssl-page-plan ${index === 1 ? "featured" : ""}`} key={product.id}>
-                {index === 1 && <span className="popular-ribbon">Most Popular</span>}
-                <h3>{product.name}</h3>
-                <p className="pricing-summary">{product.domainsCovered}</p>
-                <div className="price">{dollars(product.price)}<span className="muted" style={{ fontSize: 16 }}>/year</span></div>
-                <ul className="feature-list">
-                  {decodeList(product.features).slice(0, 6).map((feature) => <li key={feature}>{feature}</li>)}
-                </ul>
-                <div className="plan-action-row">
-                  <a className={`button ${index === 1 ? "primary" : "secondary"}`} href={orderUrl(product.slug)}>Get Started</a>
-                  <a className="button secondary" href={productUrl(product.slug)}>Details</a>
-                </div>
-              </article>
-            ))}
           </div>
         </div>
       </section>

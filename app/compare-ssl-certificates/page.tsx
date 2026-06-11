@@ -48,7 +48,7 @@ export default async function CompareSslCertificatesPage() {
                 <tbody>
                   {products.map((product) => (
                     <tr key={product.id}>
-                      <td><strong>{product.name}</strong><br /><span>{product.issuanceTime} issuance</span></td>
+                      <td><strong>{product.name}</strong></td>
                       <td>{product.validationType}</td>
                       <td>{product.domainsCovered}</td>
                       <td>{product.issuanceTime}</td>
